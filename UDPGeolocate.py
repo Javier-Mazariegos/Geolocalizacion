@@ -7,16 +7,16 @@ import sys
 import socket
 import os
 import time
-from urllib import urlopen
-from urllib import urlretrieve
-import httplib
+from urllib.request import urlopen
+from urllib.request import urlretrieve
+import http.client
 import re
 import signal
 import atexit
 import logging
 from multiprocessing import Process, Queue as mQueue
-import Queue
-import Tkinter as tk
+import queue
+import tkinter as tk
 
 # Set logging level to logging.DEBUG for detailed debug info
 logging.basicConfig(level=logging.INFO)
@@ -270,7 +270,7 @@ class UDPGeolocate(object):
             self.root.title_label = tk.Label(self.root, font=(
                 None, 16), text='Geolocation data for ' + str(IP) + ' (port ' + str(self.conf['port']) + '):').grid(row=0)
             pos = 1
-            for entry in res.iterkeys():
+            for entry,value in res.items():
                 self.root.labels_entry[entry] = tk.Label(
                     self.root, text=entry).grid(row=pos, stick='W')
                 self.root.labels_value[entry] = tk.Label(self.root, text=res[entry]).grid(
@@ -278,7 +278,7 @@ class UDPGeolocate(object):
                 pos += 1
             tk.Button(self.root, text='Quit', command=sys.exit).grid(
                 row=pos, columnspan=2)
-        except Queue.Empty:
+        except queue.Empty:
             logging.debug('Queue empty')
             pass
         except KeyboardInterrupt:
